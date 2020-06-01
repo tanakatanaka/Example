@@ -42,6 +42,26 @@ namespace CreatorKitCode
             */
         }
 
+        private void Awake()
+        {
+            Animator anim = GetComponentInChildren<Animator>();
+            if(anim != null)
+            {
+                //SceneLinkedSMB<CharacterData>.Initialise(anim, this);
+            }
+        }
+
+        // Update is called once per frame
+        private void Update()
+        {
+            Stats.Tick();
+            if (m_AttackCoolDown > 0.0f)
+            {
+                m_AttackCoolDown -= Time.deltaTime;
+            }
+
+
+        }
 
     }
 }

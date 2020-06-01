@@ -160,6 +160,32 @@ namespace CreatorKitCode
             UpdateFinalStats();
         }
 
+        /// <summary>
+        /// Remove a modifier from the stack. This modifier need to already be on the stack. e.g. used by the equipment
+        /// effect that store the modifier they add on equip and remove it when unequipped.
+        /// </summary>
+        /// <param name="modifier"></param>
+        /// 
+
+        public void RemoveModifier(StatModifier modifier)
+        {
+            m_ModifiersStack.Remove(modifier);
+            UpdateFinalStats();
+        }
+
+        /// <summary>
+        /// Add a Timed modifier. Timed modifier does not stack and instead re-adding the same type of modifier will just
+        /// reset the already existing one timer to the given duration. That the use of the id parameter : it need to be
+        /// shared by all timed effect that are the "same type". i.e. an effect that add strength can use "StrengthTimed"
+        /// as id, so if 2 object try to add that effect, they won't stack but instead just refresh the timer.
+        /// </summary>
+        /// <param name="modifier">A StatModifier container the wanted modification</param>
+        /// <param name="duration">The time during which that modification will be active.</param>
+        /// <param name="id">A name that identify that type of modification. Adding a timed modification with an id that already exist reset the timer instead of adding a new one to the stack</param>
+        /// <param name="sprite">The sprite used to display the time modification above the player UI</param>
+
+
+
         public void ChangeHealth(int amount)
         {
             CurrentHealth = Mathf.Clamp(CurrentHealth + amount, 0, stats.health);
@@ -194,6 +220,10 @@ namespace CreatorKitCode
                 float percentage = CurrentHealth / (float)previousHealth;
                 CurrentHealth = Mathf.RoundToInt(percentage * stats.health);
             }
+        }
+
+
+
 
             /// <summary>
             /// Will damage (change negatively health) of the amount of damage stored in the attackData. If the damage are
