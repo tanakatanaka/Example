@@ -14,7 +14,7 @@ namespace CreatorKitCode
 
         //public Weapon StartingWeapon;
         public InventorySystem Inventory = new InventorySystem();
-        //public EquipmentSystem Equipment = new EquipmentSystem();
+        public EquipmentSystem Equipment = new EquipmentSystem();
 
         public AudioClip[] HitClip;
 

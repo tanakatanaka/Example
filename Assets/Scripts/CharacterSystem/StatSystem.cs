@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using CreatorKitCode;
+using CreatorKitCodeInternal;
 using UnityEngine;
 
 #if UNITY_EDITOR
@@ -44,20 +45,6 @@ namespace CreatorKitCode
                 Array.Copy(other.elementalBoosts, elementalBoosts, other.elementalBoosts.Length);
             }
 
-
-            [System.Serializable]
-            public class StatModifier
-            {
-                public enum Mode
-                {
-                    Percentage,
-                    Absolute
-                }
-
-                public Mode ModifierMode = Mode.Absolute;
-                public Stats Stats = new Stats();
-            }
-
             public void Modify(StatModifier modifier)
             {
                 if (modifier.ModifierMode == StatModifier.Mode.Percentage)
@@ -89,6 +76,7 @@ namespace CreatorKitCode
                 }
             }
         }
+        
 
         public class StatModifier
         {
@@ -124,7 +112,7 @@ namespace CreatorKitCode
             public Stats stats { get; set; } = new Stats();
 
             public int CurrentHealth { get; private set; }
-            //public List<BaseElementalEffect> ElementalEffects => m_ElementalEffects;
+            public List<BaseElementalEffect> ElementalEffects => m_ElementalEffects;
             public List<TimedStatModifier> TimedModifierStack => m_TimedModifierStack;
 
             CharacterData m_Owner;
@@ -183,7 +171,111 @@ namespace CreatorKitCode
         /// <param name="duration">The time during which that modification will be active.</param>
         /// <param name="id">A name that identify that type of modification. Adding a timed modification with an id that already exist reset the timer instead of adding a new one to the stack</param>
         /// <param name="sprite">The sprite used to display the time modification above the player UI</param>
+        public void AddTimedModifier(StatModifier modifier, float duration, string id, Sprite sprite)
+        {
+            bool found = false;
+            int index = m_TimedModifierStack.Count;
 
+            for (int i = 0; i < m_TimedModifierStack.Count; ++i)
+            {
+                if (m_TimedModifierStack[i].Id == id)
+                {
+                    found = true;
+                    index = i;
+                }
+            }
+
+            if (!found)
+            {
+                m_TimedModifierStack.Add(new TimedStatModifier() { Id = id });
+            }
+
+            m_TimedModifierStack[index].EffectSprite = sprite;
+            m_TimedModifierStack[index].Duration = duration;
+            m_TimedModifierStack[index].Modifier = modifier;
+            m_TimedModifierStack[index].Reset();
+
+            UpdateFinalStats();
+        }
+
+        /// <summary>
+        /// Add an elemental effect to the StatSystem. Elemental Effect does not stack, adding the same type (the Equals
+        /// return true) will instead replace the old one with the new one.
+        /// </summary>
+        /// <param name="effect"></param>
+        /// 
+        public void AddElementalEffect(BaseElementalEffect effect)
+        {
+            effect.Applied(m_Owner);
+
+            bool replaced = false;
+            for (int i = 0; i < m_ElementalEffects.Count; ++i)
+            {
+                if(effect.Equals(m_ElementalEffects[i]))
+                {
+                    replaced = true;
+                    m_ElementalEffects[i].Removed();
+                    m_ElementalEffects[i] = effect;
+                }
+            }
+
+            if (!replaced)
+            {
+                m_ElementalEffects.Add(effect);
+            }
+
+        }
+
+        public void Death()
+        {
+            foreach (var e in ElementalEffects)
+            {
+                e.Removed();
+            }
+
+            ElementalEffects.Clear();
+            TimedModifierStack.Clear();
+
+            UpdateFinalStats();
+        }
+
+        public void Tick()
+        {
+            bool needUpdate = false;
+
+            for (int i = 0; i < m_TimedModifierStack.Count; ++i)
+            {
+                //permanent modifier will have a timer == -1.0f, so jump over them
+                if (m_TimedModifierStack[i].Timer > 0.0f)
+                {
+                    m_TimedModifierStack[i].Timer -= Time.deltaTime;
+                    if (m_TimedModifierStack[i].Timer <= 0.0f)
+                    {//modifier finished, so we remove it from the stack
+                        m_TimedModifierStack.RemoveAt(i);
+                        i--;
+                        needUpdate = true;
+                    }
+                }
+
+                if (needUpdate)
+                {
+                    UpdateFinalStats();
+                }
+            }
+
+            for (int i = 0; i < m_ElementalEffects.Count; ++i)
+            {
+                var effect = m_ElementalEffects[i];
+                effect.Update(this);
+
+                if (effect.Done)
+                {
+                    m_ElementalEffects[i].Removed();
+                    m_ElementalEffects.RemoveAt(i);
+                    i--;
+                }
+            }
+        }
 
 
         public void ChangeHealth(int amount)
@@ -203,7 +295,7 @@ namespace CreatorKitCode
                 if (modifier.Stats.health != 0)
                     maxHealthChange = true;
 
-                //stats.Modify(modifier);
+                stats.Modify(modifier);
             }
 
             foreach (var timedModifier in m_TimedModifierStack)
@@ -211,7 +303,7 @@ namespace CreatorKitCode
                 if (timedModifier.Modifier.Stats.health != 0)
                     maxHealthChange = true;
 
-                //stats.Modify(timedModifier.Modifier);
+                stats.Modify(timedModifier.Modifier);
             }
 
             //if we change the max health we update the current health to it's new value
@@ -241,7 +333,7 @@ namespace CreatorKitCode
                 DamageUI.Instance.NewDamage(totalDamage, m_Owner.transform.position);
             }
             */
-        }
+        
     }
 }
 
