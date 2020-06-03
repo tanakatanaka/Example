@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using CreatorKitCode;
 using UnityEngine;
-
+using System.Linq;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -120,10 +120,89 @@ public class EquipmentItemEditor : Editor
     ItemEditor m_ItemEditor;
 
     List<string> m_AvailableEquipEffectType;
+    SerializedProperty m_EquippedEffectListProperty;
+
     SerializedProperty m_SlotProperty;
     SerializedProperty m_MinimumStrengthProperty;
     SerializedProperty m_MinimumAgilityProperty;
     SerializedProperty m_MinimumDefenseProperty;
 
+    private void OnEnable()
+    {
+        m_Target = target as EquipmentItem;
+        m_EquippedEffectListProperty = serializedObject.FindProperty(nameof(EquipmentItem.EquippedEffects));
+
+        m_SlotProperty = serializedObject.FindProperty(nameof(EquipmentItem.Slot));
+
+        m_MinimumStrengthProperty = serializedObject.FindProperty(nameof(EquipmentItem.MinimumStrength));
+        m_MinimumAgilityProperty = serializedObject.FindProperty(nameof(EquipmentItem.MinimumAgility));
+        m_MinimumDefenseProperty = serializedObject.FindProperty(nameof(EquipmentItem.MinimumDefense));
+
+        m_ItemEditor = new ItemEditor();
+        m_ItemEditor.Init(serializedObject);
+
+        var lookup = typeof(EquipmentItem.EquippedEffect);
+        m_AvailableEquipEffectType = System.AppDomain.CurrentDomain.GetAssemblies()
+            .SelectMany(assembly => assembly.GetTypes())
+            .Where(x => x.IsClass && !x.IsAbstract && x.IsSubclassOf(lookup))
+            .Select(type => type.Name)
+            .ToList();
+    }
+
+    public override void OnInspectorGUI()
+    {
+        m_ItemEditor.GUI();
+
+        EditorGUILayout.PropertyField(m_SlotProperty);
+
+        EditorGUILayout.PropertyField(m_MinimumStrengthProperty);
+        EditorGUILayout.PropertyField(m_MinimumAgilityProperty);
+        EditorGUILayout.PropertyField(m_MinimumDefenseProperty);
+
+        int choice = EditorGUILayout.Popup("Add new Effect", -1, m_AvailableEquipEffectType.ToArray());
+
+        if (choice != -1)
+        {
+            var newInstance = ScriptableObject.CreateInstance(m_AvailableEquipEffectType[choice]);
+
+            AssetDatabase.AddObjectToAsset(newInstance, target);
+
+            m_EquippedEffectListProperty.InsertArrayElementAtIndex(m_EquippedEffectListProperty.arraySize);
+            m_EquippedEffectListProperty.GetArrayElementAtIndex(m_EquippedEffectListProperty.arraySize - 1).objectReferenceValue = newInstance;
+        }
+
+        Editor ed = null;
+        int toDelete = -1;
+        for (int i = 0; i < m_EquippedEffectListProperty.arraySize; ++i)
+        {
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.BeginVertical();
+            var item = m_EquippedEffectListProperty.GetArrayElementAtIndex(i);
+            SerializedObject obj = new SerializedObject(item.objectReferenceValue);
+
+            Editor.CreateCachedEditor(item.objectReferenceValue, null, ref ed);
+
+            ed.OnInspectorGUI();
+            EditorGUILayout.EndVertical();
+
+            if (GUILayout.Button("-", GUILayout.Width(32)))
+            {
+                toDelete = i;
+            }
+            EditorGUILayout.EndHorizontal();
+        }
+
+        if (toDelete != -1)
+        {
+            var item = m_EquippedEffectListProperty.GetArrayElementAtIndex(toDelete).objectReferenceValue;
+            DestroyImmediate(item, true);
+
+            //need to do it twice, first time just nullify the entry, second actually remove it.
+            m_EquippedEffectListProperty.DeleteArrayElementAtIndex(toDelete);
+            m_EquippedEffectListProperty.DeleteArrayElementAtIndex(toDelete);
+        }
+
+        serializedObject.ApplyModifiedProperties();
+    }
 }
 #endif
