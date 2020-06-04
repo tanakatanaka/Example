@@ -14,8 +14,8 @@ namespace CreatorKitCodeInternal
     {
         public static CharacterControl Instance { get; protected set; }
         public float Speed = 10.0f;
-        //public CharacterData Data => m_CharacterData;
-        //public CharacterData CurrentTarget => m_CurrentTargetCharacterData;
+        public CharacterData Data => m_CharacterData;
+        public CharacterData CurrentTarget => m_CurrentTargetCharacterData;
 
         public Transform WeaponLocator;
 
@@ -48,15 +48,15 @@ namespace CreatorKitCodeInternal
 
         NavMeshPath m_CalculatedPath;
 
-        //CharacterAudio m_CharacterAudio;
+        CharacterAudio m_CharacterAudio;
 
         int m_TargetLayer;
-        //CharacterData m_CurrentTargetCharacterData = null;
+        CharacterData m_CurrentTargetCharacterData = null;
         //this is a flag that tell the controller it need to clear the target once the attack finished.
         //usefull for when clicking elwswhere mid attack animation, allow to finish the attack and then exit.
         bool m_ClearPostAttack = false;
 
-        //SpawnPoint m_CurrentSpawn = null;
+        SpawnPoint m_CurrentSpawn = null;
 
         enum State
         {
@@ -94,13 +94,79 @@ namespace CreatorKitCodeInternal
             m_FaintParamID = Animator.StringToHash("Faint");
             m_RespawnParamID = Animator.StringToHash("Respawn");
 
-            //m_CharacterData = GetComponent<CharacterData>();
+            m_CharacterData = GetComponent<CharacterData>();
 
+            m_CharacterData.Equipment.OnEquiped += item =>
+            {
+                if (item.Slot == (EquipmentItem.EquipmentSlot)666)
+                {
+                    var obj = Instantiate(item.WorldObjectPrefab, WeaponLocator, false);
+                    //Helpers.RecursiveLayerChange(obj.transform, LayerMask.NameToLayer("PlayerEquipment"));
+                }
+            };
 
+            m_CharacterData.Equipment.OnUnequip += item =>
+            {
+                if (item.Slot == (EquipmentItem.EquipmentSlot)666)
+                {
+                    foreach (Transform t in WeaponLocator)
+                    {
+                        Destroy(t.gameObject);
+                    }
+                }
+            };
 
+            m_CharacterData.Init();
+
+            m_InteractableLayer = 1 << LayerMask.NameToLayer("Interactable");
+            m_LevelLayer = 1 << LayerMask.NameToLayer("Level");
+            m_TargetLayer = 1 << LayerMask.NameToLayer("Target");
+
+            m_CurrentState = State.DEFAULT;
+
+            //m_CharacterAudio = GetComponent<CharacterAudio>();
+
+            m_CharacterData.OnDamage += () =>
+            {
+                m_Animator.SetTrigger(m_HitParamID);
+                //m_CharacterAudio.Hit(transform.position);
+            };
+        }
+        // Update is called once per frame
+
+        void Update()
+        {
+            Vector3 pos = transform.position;
+
+            if(m_IsKO)
+            {
+                m_KOTimer += Time.deltaTime;
+                if (m_KOTimer > 3.0f)
+                {
+                    //GoToRespawn();
+                }
+                return;
+            }
+            //The update need to run, so we can check the health here.
+            //Another method would be to add a callback in the CharacterData that get called
+            //when health reach 0, and this class register to the callback in Start
+            //(see CharacterData.OnDamage for an example)
+            if (m_CharacterData.Stats.CurrentHealth == 0)
+            {
+                m_Animator.SetTrigger(m_FaintParamID);
+
+                m_Agent.isStopped = true;
+                m_Agent.ResetPath();
+                m_IsKO = true;
+                m_KOTimer = 0.0f;
+
+                Data.Death();
+
+                m_CharacterAudio.Death(pos);
+                return;
+            }
 
         }
-
     }
 }
 

@@ -317,23 +317,22 @@ namespace CreatorKitCode
 
 
 
-            /// <summary>
-            /// Will damage (change negatively health) of the amount of damage stored in the attackData. If the damage are
-            /// negative, this heal instead.
-            ///
-            /// This will also notify the DamageUI so a damage number is displayed.
-            /// </summary>
-            /// <param name="attackData"></param>
-            /*
-            public void Damage(Weapon.AttackData attackData)
-            {
-                int totalDamage = attackData.GetFullDamage();
-
-                ChangeHealth(-totalDamage);
-                DamageUI.Instance.NewDamage(totalDamage, m_Owner.transform.position);
-            }
-            */
+        /// <summary>
+        /// Will damage (change negatively health) of the amount of damage stored in the attackData. If the damage are
+        /// negative, this heal instead.
+        ///
+        /// This will also notify the DamageUI so a damage number is displayed.
+        /// </summary>
+        /// <param name="attackData"></param>
         
+        public void Damage(Weapon.AttackData attackData)
+        {
+            int totalDamage = attackData.GetFullDamage();
+
+            ChangeHealth(-totalDamage);
+            DamageUI.Instance.NewDamage(totalDamage, m_Owner.transform.position);
+        }
+       
     }
 }
 
