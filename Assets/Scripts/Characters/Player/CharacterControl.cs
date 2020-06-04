@@ -166,6 +166,8 @@ namespace CreatorKitCodeInternal
                 return;
             }
 
+            //Ray screenRay = CameraController.Instance.GameplayCamera.ScreenPointToRay(Input.mousePosition);
+
         }
     }
 }
