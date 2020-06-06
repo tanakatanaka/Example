@@ -26,7 +26,7 @@ namespace CreatorKitCodeInternal
         NavMeshAgent m_Agent;
         CharacterData m_CharacterData;
 
-        //HighlightableObject m_Highlighted;
+        HighlightableObject m_Highlighted;
 
         RaycastHit[] m_RaycastHitCache = new RaycastHit[16];
 
@@ -43,7 +43,7 @@ namespace CreatorKitCodeInternal
         int m_LevelLayer;
         Collider m_TargetCollider;
 
-        //InteractableObject m_TargetInteractable = null;
+        InteractableObject m_TargetInteractable = null;
         Camera m_MainCamera;
 
         NavMeshPath m_CalculatedPath;
@@ -138,7 +138,7 @@ namespace CreatorKitCodeInternal
         {
             Vector3 pos = transform.position;
 
-            if(m_IsKO)
+            if (m_IsKO)
             {
                 m_KOTimer += Time.deltaTime;
                 if (m_KOTimer > 3.0f)
@@ -166,7 +166,113 @@ namespace CreatorKitCodeInternal
                 return;
             }
 
-            //Ray screenRay = CameraController.Instance.GameplayCamera.ScreenPointToRay(Input.mousePosition);
+            Ray screenRay = CameraController.Instance.GameplayCamera.ScreenPointToRay(Input.mousePosition);
+
+            if (m_TargetInteractable != null)
+            {
+                CheckInteractableRange();
+            }
+
+            if (m_CurrentTargetCharacterData != null)
+            {
+                if (m_CurrentTargetCharacterData.Stats.CurrentHealth == 0)
+                {
+                    m_CurrentTargetCharacterData = null;
+                }
+                else
+                {
+                    CheckAttack();
+                }
+            }
+
+            float mouseWheel = Input.GetAxis("Mouse ScrollWheel");
+
+            if (!Mathf.Approximately(mouseWheel, 0.0f))
+            {
+                Vector3 view = m_MainCamera.ScreenToViewportPoint(Input.mousePosition);
+                if (view.x > 0f && view.x < 1f && view.y > 0f && view.y < 1f)
+                {
+                    CameraController.Instance.Zoom(-mouseWheel * Time.deltaTime * 20.0f);
+                }
+            }
+
+            if (Input.GetMouseButtonDown(0))
+            { //if we click the mouse button, we clear any previously et targets
+
+                if (m_CurrentState != State.ATTACKING)
+                {
+                    m_CurrentTargetCharacterData = null;
+                    m_TargetInteractable = null;
+                }
+                else
+                {
+                    m_ClearPostAttack = true;
+                }
+            }
+
+            if (!EventSystem.current.IsPointerOverGameObject() && m_CurrentState != State.ATTACKING)
+            {
+                //Raycast to find object currently under the mouse cursor
+                ObjectsRaycasts(screenRay);
+
+                if (Input.GetMouseButton(0))
+                {
+                    if (m_TargetInteractable == null && m_CurrentTargetCharacterData == null)
+                    {
+                        InteractableObject obj = m_Highlighted as InteractableObject;
+                        if (obj)
+                        {
+                            InteractWith(obj);
+                        }
+                        else
+                        {
+                            CharacterData data = m_Highlighted as CharacterData;
+                            if (data != null)
+                            {
+                                m_CurrentTargetCharacterData = data;
+                            }
+                            else
+                            {
+                                MoveCheck(screenRay);
+                            }
+                        }
+                    }
+                }
+
+                m_Animator.SetFloat(m_SpeedParamID, m_Agent.velocity.magnitude / m_Agent.speed);
+
+                if (Input.GetKeyUp(KeyCode.I))
+                {
+                    //UISystem.Instance.ToggleInventory();
+                }
+            }
+        }
+
+        public void InteractWith(InteractableObject obj)
+        {
+
+        }
+
+
+        void CheckInteractableRange()
+        {
+
+        }
+
+        void CheckAttack()
+        {
+
+
+        }
+
+        void ObjectsRaycasts(Ray screenRay)
+        {
+
+
+        }
+
+        void MoveCheck(Ray screenRay)
+        {
 
         }
     }
