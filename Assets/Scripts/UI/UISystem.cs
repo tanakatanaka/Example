@@ -36,7 +36,7 @@ namespace CreatorKitCodeInternal
         {
             Instance = this;
 
-            InventoryWindow.Init();
+            //InventoryWindow.Init();
         }
     }
 }

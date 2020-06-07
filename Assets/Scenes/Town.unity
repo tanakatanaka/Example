@@ -308,8 +308,76 @@ PrefabInstance:
       propertyPath: m_Name
       value: Character
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5549394745342254541, guid: 40ef61f4af8976449b09dc58a32c2cbd, type: 3}
+    - {fileID: 5549394745342254537, guid: 40ef61f4af8976449b09dc58a32c2cbd, type: 3}
+    - {fileID: 5305352181106717466, guid: 40ef61f4af8976449b09dc58a32c2cbd, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 40ef61f4af8976449b09dc58a32c2cbd, type: 3}
+--- !u!1 &879528724 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5549394745342254548, guid: 40ef61f4af8976449b09dc58a32c2cbd,
+    type: 3}
+  m_PrefabInstance: {fileID: 879528723}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &879528725
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 879528724}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5bbc59441a9104b4891b3803ac7de30a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CharacterName: 
+  Stats:
+    baseStats:
+      health: 20
+      strength: 5
+      defense: 5
+      agility: 5
+      elementalProtection: 00000000000000000000000000000000
+      elementalBoosts: 00000000000000000000000000000000
+  StartingWeapon: {fileID: 0}
+  HitClip: []
+--- !u!114 &879528726
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 879528724}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c172ac715217c71439e9c90f1aacb9a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  FootstepClips:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  VocalAttack: []
+  VocalHit: []
+  DeathClips: []
+  UseType: 0
+--- !u!114 &879528727
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 879528724}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2d57263054c3ea4ab975a519341c6fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Speed: 10
+  WeaponLocator: {fileID: 0}
+  SpurSoundClips: []
 --- !u!1 &1216996862
 GameObject:
   m_ObjectHideFlags: 0
