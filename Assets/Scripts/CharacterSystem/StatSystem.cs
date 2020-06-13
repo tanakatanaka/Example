@@ -327,10 +327,10 @@ namespace CreatorKitCode
         
         public void Damage(Weapon.AttackData attackData)
         {
-            int totalDamage = attackData.GetFullDamage();
+            //int totalDamage = attackData.GetFullDamage();
 
-            ChangeHealth(-totalDamage);
-            DamageUI.Instance.NewDamage(totalDamage, m_Owner.transform.position);
+            //ChangeHealth(-totalDamage);
+            //DamageUI.Instance.NewDamage(totalDamage, m_Owner.transform.position);
         }
        
     }
