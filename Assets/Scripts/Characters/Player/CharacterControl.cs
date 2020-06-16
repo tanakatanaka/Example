@@ -8,9 +8,9 @@ using UnityEngine.Serialization;
 
 namespace CreatorKitCodeInternal
 {
-    public class CharacterControl : MonoBehaviour
-         //AnimationControllerDispatcher.IAttackFrameReceiver,
-        //AnimationControllerDispatcher.IFootstepFrameReceiver
+    public class CharacterControl : MonoBehaviour,
+         AnimationControllerDispatcher.IAttackFrameReceiver,
+         AnimationControllerDispatcher.IFootstepFrameReceiver
     {
         public static CharacterControl Instance { get; protected set; }
         public float Speed = 10.0f;
@@ -250,29 +250,180 @@ namespace CreatorKitCodeInternal
 
         public void InteractWith(InteractableObject obj)
         {
-
+            if (obj.IsInteractable)
+            {
+                m_TargetCollider = obj.GetComponentInChildren<Collider>();
+                m_TargetInteractable = obj;
+                m_Agent.SetDestination(obj.transform.position);
+            }
         }
 
+        public void FootstepFrame()
+        {
+            Vector3 pos = transform.position;
+
+            m_CharacterAudio.Step(pos);
+
+            SFXManager.PlaySound(SFXManager.Use.Player, new SFXManager.PlayData()
+            {
+                Clip = SpurSoundClips[Random.Range(0, SpurSoundClips.Length)],
+                Position = pos,
+                PitchMin = 0.8f,
+                PitchMax = 1.2f,
+                Volume = 0.3f
+            });
+
+            VFXManager.PlayVFX(VFXType.StepPuff, pos);
+        }
 
         void CheckInteractableRange()
         {
+            if (m_CurrentState == State.ATTACKING)
+            {
+                return;
+            }
 
+            Vector3 distance = m_TargetCollider.ClosestPointOnBounds(transform.position) - transform.position;
+
+            if (distance.sqrMagnitude < 1.5f * 1.5f)
+            {
+                StopAgent();
+                m_TargetInteractable.InteractWith(m_CharacterData);
+                m_TargetInteractable = null;
+            }
+        }
+
+        void StopAgent()
+        {
+            m_Agent.ResetPath();
+            m_Agent.velocity = Vector3.zero;
         }
 
         void CheckAttack()
         {
+            if (m_CurrentState == State.ATTACKING)
+            {
+                return;
+            }
+
+            if(m_CharacterData.CanAttackReach(m_CurrentTargetCharacterData))
+            {
+                StopAgent();
+
+                //if the mouse button isn't pressed, we do NOT attack
+                if (Input.GetMouseButton(0))
+                {
+                    Vector3 forward = (m_CurrentTargetCharacterData.transform.position - transform.position);
+                    forward.y = 0;
+                    forward.Normalize();
+
+                    transform.forward = forward;
+                    if (m_CharacterData.CanAttackTarget(m_CurrentTargetCharacterData))
+                    {
+                        m_CurrentState = State.ATTACKING;
+
+                        m_CharacterData.AttackTriggered();
+                        m_Animator.SetTrigger(m_AttackParamID);
+                    }
+                }
+            }
+            else
+            {
+                m_Agent.SetDestination(m_CurrentTargetCharacterData.transform.position);
+            }
+        }
+
+        public void AttackFrame()
+        {
+            if (m_CurrentTargetCharacterData == null)
+            {
+                m_ClearPostAttack = false;
+                return;
+            }
+
+            //if we can't reach the target anymore when it's time to damage, then that attack miss.
+            if(m_CharacterData.CanAttackReach(m_CurrentTargetCharacterData))
+            {
+                m_CharacterData.Attack(m_CurrentTargetCharacterData);
+
+                var attackPos = m_CurrentTargetCharacterData.transform.position + transform.up * 0.5f;
+                VFXManager.PlayVFX(VFXType.Hit, attackPos);
+                SFXManager.PlaySound(m_CharacterAudio.UseType, new SFXManager.PlayData() { Clip = m_CharacterData.Equipment.Weapon.GetHitSound(), PitchMin = 0.8f, PitchMax = 1.2f, Position = attackPos });
 
 
+            }
         }
 
         void ObjectsRaycasts(Ray screenRay)
         {
+            bool somethingFound = false;
 
+            //first check for interactable Object
+            int count = Physics.SphereCastNonAlloc(screenRay, 1.0f, m_RaycastHitCache, 1000.0f, m_InteractableLayer);
 
+            if (count > 0)
+            {
+                for (int i = 0; i < count; ++i)
+                {
+                    InteractableObject obj = m_RaycastHitCache[0].collider.GetComponentInParent<InteractableObject>();
+
+                    if (obj != null && obj.IsInteractable)
+                    {
+                        //SwitchHighlightedObject(obj);
+                        somethingFound = true;
+                        break;
+                    }
+
+                }      
+          
+            }
+            else
+            {
+                count = Physics.SphereCastNonAlloc(screenRay, 1.0f, m_RaycastHitCache, 1000.0f, m_TargetLayer);
+
+                if(count > 0)
+                {
+                    CharacterData data = m_RaycastHitCache[0].collider.GetComponentInParent<CharacterData>();
+                    if(data != null)
+                    {
+                        //SwitchHighlightedObject(data);
+                        somethingFound = true;
+                    }
+
+                }
+            }
+
+            if(!somethingFound && m_Highlighted != null)
+            {
+                //SwitchHighlightedObject(null);
+            }
         }
 
         void MoveCheck(Ray screenRay)
         {
+            if(NavMeshPathStatus.PathComplete == m_CalculatedPath.status)
+            {
+                m_Agent.SetPath(m_CalculatedPath);
+                m_CalculatedPath.ClearCorners();
+            }
+
+            if(Physics.RaycastNonAlloc(screenRay, m_RaycastHitCache, 1000.0f, m_LevelLayer) > 0)
+            {
+                Vector3 point = m_RaycastHitCache[0].point;
+                //avoid recomputing path for close enough click
+                if(Vector3.SqrMagnitude(point - m_LastRaycastResult) > 1.0f)
+                {
+                    NavMeshHit hit;
+                    if (NavMesh.SamplePosition(point, out hit, 10.0f, NavMesh.AllAreas))
+                    {
+                        //sample just around where we hit, avoid setting destination outside of navmesh (ie. on building)
+                        m_LastRaycastResult = point;
+                        m_Agent.SetDestination(hit.position);
+
+                        m_Agent.CalculatePath(hit.position, m_CalculatedPath);
+                    }
+                }
+            }
 
         }
     }

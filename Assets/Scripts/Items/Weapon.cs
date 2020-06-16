@@ -162,25 +162,28 @@ namespace CreatorKitCode
 
         }
 
-        /*
+        
         public AudioClip GetHitSound()
         {
             if (HitSounds == null || HitSounds.Length == 0)
             {
                 return SFXManager.GetDefaultHit();
             }
-        }
-        */
 
-        /*
+            return HitSounds[Random.Range(0, HitSounds.Length)];
+        }
+        
+
+       
         public AudioClip GetSwingSound()
         {
             if (SwingSounds == null || SwingSounds.Length == 0)
+            {
                 return SFXManager.GetDefaultSwingSound();
+            }
 
-            return 
+            return SwingSounds[Random.Range(0, SwingSounds.Length)];
         }
-        */
     }
 }
 
