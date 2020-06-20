@@ -124,12 +124,12 @@ namespace CreatorKitCodeInternal
 
             m_CurrentState = State.DEFAULT;
 
-            //m_CharacterAudio = GetComponent<CharacterAudio>();
+            m_CharacterAudio = GetComponent<CharacterAudio>();
 
             m_CharacterData.OnDamage += () =>
             {
                 m_Animator.SetTrigger(m_HitParamID);
-                //m_CharacterAudio.Hit(transform.position);
+                m_CharacterAudio.Hit(transform.position);
             };
         }
         // Update is called once per frame
