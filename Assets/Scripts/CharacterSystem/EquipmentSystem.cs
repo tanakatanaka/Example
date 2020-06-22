@@ -59,7 +59,7 @@ namespace CreatorKitCode
         ///  /// <param name="item">Which item to equip</param>
         public void Equip(EquipmentItem item)
         {
-            //Unequip(item.Slot, true);
+            Unequip(item.Slot, true);
 
             OnEquiped?.Invoke(item);
 

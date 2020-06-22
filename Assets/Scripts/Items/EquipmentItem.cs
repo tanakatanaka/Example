@@ -53,7 +53,7 @@ namespace CreatorKitCode
                 return false;
             }
 
-            //user.Equipment.Equip(this);
+            user.Equipment.Equip(this);
 
             return true;
         }

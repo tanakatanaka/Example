@@ -21,13 +21,13 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Rakes
-  m_Shader: {fileID: -6465566751694194690, guid: 189df788999d7b3468b9f2fddf1443a4,
+  m_Shader: {fileID: -6465566751694194690, guid: 7dc3d45fafc957b45b903e6450e9c4c3,
     type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 2099
+  m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
   m_SavedProperties:

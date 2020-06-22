@@ -248,6 +248,18 @@ namespace CreatorKitCodeInternal
             }
         }
 
+        public void SetNewRespawn(SpawnPoint point)
+        {
+            if (m_CurrentSpawn != null)
+            {
+                m_CurrentSpawn.Deactivated();
+            }
+
+            m_CurrentSpawn = point;
+            m_CurrentSpawn.Activated();
+
+        }
+
         public void InteractWith(InteractableObject obj)
         {
             if (obj.IsInteractable)
@@ -369,7 +381,7 @@ namespace CreatorKitCodeInternal
 
                     if (obj != null && obj.IsInteractable)
                     {
-                        //SwitchHighlightedObject(obj);
+                        SwitchHighlightedObject(obj);
                         somethingFound = true;
                         break;
                     }
@@ -386,7 +398,7 @@ namespace CreatorKitCodeInternal
                     CharacterData data = m_RaycastHitCache[0].collider.GetComponentInParent<CharacterData>();
                     if(data != null)
                     {
-                        //SwitchHighlightedObject(data);
+                        SwitchHighlightedObject(data);
                         somethingFound = true;
                     }
 
@@ -395,7 +407,22 @@ namespace CreatorKitCodeInternal
 
             if(!somethingFound && m_Highlighted != null)
             {
-                //SwitchHighlightedObject(null);
+                SwitchHighlightedObject(null);
+            }
+        }
+
+        void SwitchHighlightedObject(HighlightableObject obj)
+        {
+            if (m_Highlighted != null)
+            {
+                m_Highlighted.Dehighlight();
+            }
+
+            m_Highlighted = obj;
+
+            if (m_Highlighted != null)
+            {
+                m_Highlighted.Highlight();
             }
         }
 
