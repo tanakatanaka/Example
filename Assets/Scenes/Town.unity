@@ -1521,12 +1521,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Speed: 10
-  WeaponLocator: {fileID: 0}
+  WeaponLocator: {fileID: 879528728}
   SpurSoundClips:
   - {fileID: 8300000, guid: daa761ef6c428a344b4858008944ac86, type: 3}
   - {fileID: 8300000, guid: 7b0cf46482c46934e9a0b9dd41b0440a, type: 3}
   - {fileID: 8300000, guid: 11f81a1d4cbde2f4e943503e5e123e5e, type: 3}
   - {fileID: 8300000, guid: 10f3af480312d4f408f699205054cf74, type: 3}
+--- !u!4 &879528728 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8136415202365550156, guid: 40ef61f4af8976449b09dc58a32c2cbd,
+    type: 3}
+  m_PrefabInstance: {fileID: 879528723}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &977586954 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5549394743663049037, guid: 40ef61f4af8976449b09dc58a32c2cbd,

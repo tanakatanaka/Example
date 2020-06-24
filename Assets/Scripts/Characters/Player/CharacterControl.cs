@@ -364,6 +364,15 @@ namespace CreatorKitCodeInternal
 
 
             }
+
+            if (m_ClearPostAttack)
+            {
+                m_ClearPostAttack = false;
+                m_CurrentTargetCharacterData = null;
+                m_TargetInteractable = null;
+            }
+
+            m_CurrentState = State.DEFAULT;
         }
 
         void ObjectsRaycasts(Ray screenRay)
