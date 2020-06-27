@@ -2038,8 +2038,8 @@ Light:
   serializedVersion: 10
   m_Type: 1
   m_Shape: 0
-  m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
-  m_Intensity: 1
+  m_Color: {r: 1, g: 0.80784315, b: 0.46666667, a: 1}
+  m_Intensity: 3
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -2081,7 +2081,7 @@ Light:
   m_Lightmapping: 1
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
-  m_BounceIntensity: 1
+  m_BounceIntensity: 0
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
@@ -2096,7 +2096,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1269011496}
   m_LocalRotation: {x: 0.35711557, y: 0.20704806, z: -0.84332883, w: 0.34408736}
-  m_LocalPosition: {x: 4.16, y: 3, z: 0}
+  m_LocalPosition: {x: 4.16, y: 3, z: 20.39}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -2474,6 +2474,178 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!1 &1843569100
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1843569101}
+  m_Layer: 0
+  m_Name: Enemies
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1843569101
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1843569100}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -1.0519999, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1871191641}
+  m_Father: {fileID: 0}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1871191640
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 1843569101}
+    m_Modifications:
+    - target: {fileID: 5667712714323555562, guid: fafd305c9f496b04d9a856ab300bb3ed,
+        type: 3}
+      propertyPath: m_Name
+      value: CactusEnemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 5667712714323555575, guid: fafd305c9f496b04d9a856ab300bb3ed,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5667712714323555575, guid: fafd305c9f496b04d9a856ab300bb3ed,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5667712714323555575, guid: fafd305c9f496b04d9a856ab300bb3ed,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5667712714323555575, guid: fafd305c9f496b04d9a856ab300bb3ed,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5667712714323555575, guid: fafd305c9f496b04d9a856ab300bb3ed,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5667712714323555575, guid: fafd305c9f496b04d9a856ab300bb3ed,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5667712714323555575, guid: fafd305c9f496b04d9a856ab300bb3ed,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5667712714323555575, guid: fafd305c9f496b04d9a856ab300bb3ed,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5667712714323555575, guid: fafd305c9f496b04d9a856ab300bb3ed,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5667712714323555575, guid: fafd305c9f496b04d9a856ab300bb3ed,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5667712714323555575, guid: fafd305c9f496b04d9a856ab300bb3ed,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 5667712714323555574, guid: fafd305c9f496b04d9a856ab300bb3ed, type: 3}
+    - {fileID: 5667712714323555573, guid: fafd305c9f496b04d9a856ab300bb3ed, type: 3}
+    - {fileID: 1514832715870360197, guid: fafd305c9f496b04d9a856ab300bb3ed, type: 3}
+  m_SourcePrefab: {fileID: 100100000, guid: fafd305c9f496b04d9a856ab300bb3ed, type: 3}
+--- !u!4 &1871191641 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5667712714323555575, guid: fafd305c9f496b04d9a856ab300bb3ed,
+    type: 3}
+  m_PrefabInstance: {fileID: 1871191640}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1871191642 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5667712714323555562, guid: fafd305c9f496b04d9a856ab300bb3ed,
+    type: 3}
+  m_PrefabInstance: {fileID: 1871191640}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1871191643
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1871191642}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5bbc59441a9104b4891b3803ac7de30a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CharacterName: Cactus Nails
+  Stats:
+    baseStats:
+      health: 10
+      strength: 2
+      defense: 1
+      agility: 0
+      elementalProtection: 00000000000000000000000000000000
+      elementalBoosts: 00000000000000000000000000000000
+  StartingWeapon: {fileID: 11400000, guid: 091ce27cda1afc64da774a1dfb632447, type: 2}
+  HitClip:
+  - {fileID: 8300000, guid: 52bbf808b3d93fb4f861009f0d06498b, type: 3}
+  - {fileID: 8300000, guid: a2b0c466fe3cda84da5a4a1f58ae2f07, type: 3}
+  - {fileID: 8300000, guid: a8594e4675d2b1049a71204ba41705d8, type: 3}
+--- !u!114 &1871191644
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1871191642}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c172ac715217c71439e9c90f1aacb9a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  FootstepClips:
+  - {fileID: 8300000, guid: eda34214310f8c547b7d9186ef017073, type: 3}
+  - {fileID: 8300000, guid: ab7b40ecbeb85364880fd45b6faabf58, type: 3}
+  VocalAttack:
+  - {fileID: 8300000, guid: 145d7148a25bd404a8cdac3ecea1bb2a, type: 3}
+  - {fileID: 8300000, guid: 9853e91ce0767cf4abb04ff4032ddebc, type: 3}
+  - {fileID: 8300000, guid: fafcbe2bb0ffece428b89c570693ca06, type: 3}
+  - {fileID: 8300000, guid: 27763ee8e113c9a4982cea55902a5264, type: 3}
+  VocalHit:
+  - {fileID: 8300000, guid: d17d2c9d14c5c8942910b5ac0e5cd83e, type: 3}
+  - {fileID: 8300000, guid: 1ed79c0675f65004bb270df6fd3ceec9, type: 3}
+  - {fileID: 8300000, guid: 04578b36fc75b994599cce92aa1f1451, type: 3}
+  - {fileID: 8300000, guid: b00b880b6155ee541af054cc0982eb69, type: 3}
+  - {fileID: 8300000, guid: 12afbbe73625e904a818ef07aca76cc9, type: 3}
+  DeathClips:
+  - {fileID: 8300000, guid: 960cafd8dbde8ca40b16cbc50e187822, type: 3}
+  - {fileID: 8300000, guid: 9853e91ce0767cf4abb04ff4032ddebc, type: 3}
+  - {fileID: 8300000, guid: fafcbe2bb0ffece428b89c570693ca06, type: 3}
+  UseType: 1
 --- !u!1001 &3570583309358676607
 PrefabInstance:
   m_ObjectHideFlags: 0
