@@ -129,10 +129,12 @@ namespace CreatorKitCode
                 wae.OnAttack(target, attacker, ref attackData);
             }
 
-            //target.Damage(attackData);
+            target.Damage(attackData);
 
             foreach (var wae in AttackEffects)
+            {
                 wae.OnPostAttack(target, attacker, attackData);
+            }
         }
 
         public bool CanHit(CharacterData attacker, CharacterData target)

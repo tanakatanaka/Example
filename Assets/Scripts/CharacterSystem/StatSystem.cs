@@ -277,7 +277,6 @@ namespace CreatorKitCode
             }
         }
 
-
         public void ChangeHealth(int amount)
         {
             CurrentHealth = Mathf.Clamp(CurrentHealth + amount, 0, stats.health);
@@ -327,10 +326,10 @@ namespace CreatorKitCode
         
         public void Damage(Weapon.AttackData attackData)
         {
-            //int totalDamage = attackData.GetFullDamage();
+            int totalDamage = attackData.GetFullDamage();
 
-            //ChangeHealth(-totalDamage);
-            //DamageUI.Instance.NewDamage(totalDamage, m_Owner.transform.position);
+            ChangeHealth(-totalDamage);
+            DamageUI.Instance.NewDamage(totalDamage, m_Owner.transform.position);
         }
        
     }
